@@ -243,16 +243,13 @@ describe('Service: Board - Determining legal castling', () => {
 
 	it('should identify castling as a legal move', inject([BoardService], (service: BoardService) => {
 	  service.board = testboard;
-    service.calcPossibleMoves(testboard);
-    expect(service.confirmValidMove([7, 4], [7, 6], boardOrders)).toBeTruthy();
-    expect(service.confirmValidMove([7, 4], [7, 2], boardOrders)).toBeTruthy();
-    expect(service.confirmValidMove([0, 4], [0, 6], boardOrders)).toBeTruthy();
-    expect(service.confirmValidMove([0, 4], [0, 2], boardOrders)).toBeTruthy();
-    console.log(boardOrders.length);
-
-    expect(boardOrders).toContain({ orderType: OrderType.Move, pos: [0, 0], endPos: [0, 3] });
-    
-   	expect(boardOrders).toEqual(jasmine.arrayContaining(
+	    service.calcPossibleMoves(testboard);
+	    expect(service.confirmValidMove([7, 4], [7, 6], boardOrders)).toBeTruthy();
+	    expect(service.confirmValidMove([7, 4], [7, 2], boardOrders)).toBeTruthy();
+	    expect(service.confirmValidMove([0, 4], [0, 6], boardOrders)).toBeTruthy();
+	    expect(service.confirmValidMove([0, 4], [0, 2], boardOrders)).toBeTruthy();
+	    expect(boardOrders).toContain({ orderType: OrderType.Move, pos: [0, 0], endPos: [0, 3] });
+	   	expect(boardOrders).toEqual(jasmine.arrayContaining(
 		[
 			{ orderType: OrderType.Move, pos: [7, 4], endPos: [7, 6] }, //first expect, king move
 			{ orderType: OrderType.Move, pos: [7, 7], endPos: [7, 5] }, //first expect, rook move
@@ -266,13 +263,24 @@ describe('Service: Board - Determining legal castling', () => {
 	
 	}));
 
+	it('should identify castling out of check as illegal', inject([BoardService], (service: BoardService) => {
+		service.board = testboard;	
+		testboard.addPiece(new Piece.Rook(Color.Black), [4, 4]);
+		testboard.addPiece(new Piece.Rook(Color.White), [3, 4]);
+		service.calcPossibleMoves(testboard);
+    	expect(service.confirmValidMove([0, 4], [0, 6])).toBeFalsy();
+    	expect(service.confirmValidMove([0, 4], [0, 2])).toBeFalsy();
+    	expect(service.confirmValidMove([7, 4], [7, 6])).toBeFalsy();
+    	expect(service.confirmValidMove([7, 4], [7, 2])).toBeFalsy();
+	}));
+
 	it('should identify castling through pieces as illegal', inject([BoardService], (service: BoardService) => {
 		service.board = testboard;	
 		testboard.addPiece(new Piece.Bishop(Color.Black), [7, 5]);
 		testboard.addPiece(new Piece.Knight(Color.Black), [7, 3]);
 		service.calcPossibleMoves(testboard);
-    expect(service.confirmValidMove([7, 4], [7, 6])).toBeFalsy();
-    expect(service.confirmValidMove([7, 4], [7, 2])).toBeFalsy();
+    	expect(service.confirmValidMove([7, 4], [7, 6])).toBeFalsy();
+    	expect(service.confirmValidMove([7, 4], [7, 2])).toBeFalsy();
 	}));
 
 	it('should identify castling ontop pieces as illegal', inject([BoardService], (service: BoardService) => {
@@ -280,8 +288,8 @@ describe('Service: Board - Determining legal castling', () => {
 		testboard.addPiece(new Piece.Bishop(Color.White), [0, 6]);
 		testboard.addPiece(new Piece.Knight(Color.White), [0, 2]);
 		service.calcPossibleMoves(testboard);
-    expect(service.confirmValidMove([0, 4], [0, 6])).toBeFalsy();
-    expect(service.confirmValidMove([0, 4], [0, 2])).toBeFalsy();
+    	expect(service.confirmValidMove([0, 4], [0, 6])).toBeFalsy();
+    	expect(service.confirmValidMove([0, 4], [0, 2])).toBeFalsy();
 	}));
 
 	it('should identify castling through check as illegal', inject([BoardService], (service: BoardService) => {

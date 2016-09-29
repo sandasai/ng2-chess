@@ -226,7 +226,7 @@ export class BoardService {
 	verifyCastle(king: Piece, pos: [number, number]): boolean {
 		let dir = (pos[1] - king.pos[1] < 0)? -1 : 1;
 		let firstSq: [number, number] = [king.pos[0], king.pos[1] + dir]; //castle moves two squaes, this is the first square
-		for (let sq of [firstSq, pos]) {
+		for (let sq of [king.pos, firstSq, pos]) {
 			let dupBoard: Board = BoardService.deepCopy(this.board);
 			let prospectKing: Piece = dupBoard.getPiece(king.pos);
 			dupBoard.movePiece(prospectKing, sq);
