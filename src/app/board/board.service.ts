@@ -87,7 +87,7 @@ export class BoardService {
 			If an opponent's piece can move to your King, then move is not valid
 	In addition for checking whether the move is valid, returns a list of moveOrders to be completed (optional)
 	*/
-	confirmValidMove(startPos: [number, number], endPos: [number, number], moveOrders?: MoveOrder[], boardOrders?: BoardOrder[]): boolean {
+	confirmValidMove(startPos: [number, number], endPos: [number, number], boardOrders?: BoardOrder[]): boolean {
 		let piece = this.board.getPiece(startPos);
 		let isPosInPossibleMoves = false;
 		if (piece == null)
@@ -99,29 +99,19 @@ export class BoardService {
 		//handling special King movements - castling
 		if (piece.rank === Rank.King && sqDist(startPos, endPos) === 2) {
 			if (this.verifyCastle(piece, endPos)) {
-				//special = (endPos[1] - startPos[1] > 0) ? SpecialMove.CastleKingSide : SpecialMove.CastleQueenSide;
-				if (moveOrders) {
-					moveOrders.push( { startPos: startPos, endPos: endPos });
-					let rookMoveOrder = {} as MoveOrder;
+				if (boardOrders) {
+					boardOrders.push( { orderType: OrderType.Move, pos: startPos, endPos: endPos });
 					let rookBoardOrder = {} as BoardOrder;
 					if (endPos[1] - startPos[1] > 0) { //Castle king side
-						rookMoveOrder.startPos = [startPos[0], 7];
-						rookMoveOrder.endPos = [startPos[0], 5];
-
 						rookBoardOrder.orderType = OrderType.Move;
 						rookBoardOrder.pos = [startPos[0], 7];
 						rookBoardOrder.endPos = [startPos[0], 5];
 					}
 					else { //Castle queen side
-						rookMoveOrder.startPos = [startPos[0], 0];
-						rookMoveOrder.endPos = [startPos[0], 3];
-
-
 						rookBoardOrder.orderType = OrderType.Move;
-						rookBoardOrder.pos = [startPos[0], 7];
-						rookBoardOrder.endPos = [startPos[0], 5];
+						rookBoardOrder.pos = [startPos[0], 0];
+						rookBoardOrder.endPos = [startPos[0], 3];
 					}
-					moveOrders.push(rookMoveOrder);
 					boardOrders.push(rookBoardOrder);
 				}
 				return true;
@@ -141,8 +131,7 @@ export class BoardService {
 		if (this.inCheck(prospectPiece.color, dupBoard))
 			return false;
 
-		if (moveOrders) {
-			moveOrders.push({ startPos: startPos, endPos: endPos });
+		if (boardOrders) {
 			boardOrders.push({ orderType: OrderType.Move, pos: startPos, endPos: endPos });
 			//handling special Pawn movements - EnPassent
 			if (piece.rank === Rank.Pawn && 

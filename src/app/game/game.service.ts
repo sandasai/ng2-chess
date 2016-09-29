@@ -72,15 +72,9 @@ export class GameService {
           this.userState = UserState.SelectSt;
           this.changeSelect();
         }
-      	let moveOrders: MoveOrder[] = [];
         let boardOrders: BoardOrder[] = [];
-        if (!this._boardService.confirmValidMove(this._startPos, pos, moveOrders, boardOrders))
+        if (!this._boardService.confirmValidMove(this._startPos, pos, boardOrders))
           return;
-        /*
-        for (let moveOrder of moveOrders) {
-        	this._boardService.movePiece(this.board.getPiece(moveOrder.startPos), moveOrder.endPos); 
-        }
-        */
         this._boardService.processOrders(boardOrders);
         
   			this.endTurn();

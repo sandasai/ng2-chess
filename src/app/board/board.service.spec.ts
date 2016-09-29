@@ -5,7 +5,7 @@
 import { TestBed, async, inject } from '@angular/core/testing';
 import { BoardService } from './board.service';
 import { Board } from './board';
-import { Color, MoveOrder } from '../chess.util';
+import { Color, BoardOrder, OrderType } from '../chess.util';
 import * as Piece from '../piece/piece';
 
 describe('Service: Board', () => {
@@ -210,7 +210,7 @@ describe('Service: Board', () => {
 
 describe('Service: Board - Determining legal castling', () => {
 	let testboard: Board;
-	let moveOrders: MoveOrder[] = [];
+	let boardOrders: BoardOrder[] = [];
 
 	beforeEach(() => {
     TestBed.configureTestingModule({
@@ -238,28 +238,32 @@ describe('Service: Board - Determining legal castling', () => {
     testboard.addPiece(new Piece.Rook(Color.White), [7, 0]);
     testboard.addPiece(new Piece.Rook(Color.White), [7, 7]);
 
-  	moveOrders = [];
+  	boardOrders = [];
   });
 
 	it('should identify castling as a legal move', inject([BoardService], (service: BoardService) => {
 	  service.board = testboard;
     service.calcPossibleMoves(testboard);
-    expect(service.confirmValidMove([7, 4], [7, 6], moveOrders)).toBeTruthy();
-    expect(service.confirmValidMove([7, 4], [7, 2], moveOrders)).toBeTruthy();
-    expect(service.confirmValidMove([0, 4], [0, 6], moveOrders)).toBeTruthy();
-    expect(service.confirmValidMove([0, 4], [0, 2], moveOrders)).toBeTruthy();
+    expect(service.confirmValidMove([7, 4], [7, 6], boardOrders)).toBeTruthy();
+    expect(service.confirmValidMove([7, 4], [7, 2], boardOrders)).toBeTruthy();
+    expect(service.confirmValidMove([0, 4], [0, 6], boardOrders)).toBeTruthy();
+    expect(service.confirmValidMove([0, 4], [0, 2], boardOrders)).toBeTruthy();
+    console.log(boardOrders.length);
 
-   	expect(moveOrders).toEqual(jasmine.arrayContaining(
-    	[
-    			{ startPos: [7, 4], endPos: [7, 6] }, //first expect, king move
-    			{ startPos: [7, 7], endPos: [7, 5] }, //first expect, rook move
-    			{ startPos: [7, 4], endPos: [7, 2] }, //second, king move
-    			{ startPos: [7, 0], endPos: [7, 3] }, //second, rook move
-    			{ startPos: [0, 4], endPos: [0, 6] }, //third, king move
-    			{ startPos: [0, 7], endPos: [0, 5] }, //third, rook move
-    			{ startPos: [0, 4], endPos: [0, 2] }, //fourth, king move
-    			{ startPos: [0, 0], endPos: [0, 3] }, //fourth, rook move
-			]));
+    expect(boardOrders).toContain({ orderType: OrderType.Move, pos: [0, 0], endPos: [0, 3] });
+    
+   	expect(boardOrders).toEqual(jasmine.arrayContaining(
+		[
+			{ orderType: OrderType.Move, pos: [7, 4], endPos: [7, 6] }, //first expect, king move
+			{ orderType: OrderType.Move, pos: [7, 7], endPos: [7, 5] }, //first expect, rook move
+			{ orderType: OrderType.Move, pos: [7, 4], endPos: [7, 2] }, //second, king move
+			{ orderType: OrderType.Move, pos: [7, 0], endPos: [7, 3] }, //second, rook move
+			{ orderType: OrderType.Move, pos: [0, 4], endPos: [0, 6] }, //third, king move
+			{ orderType: OrderType.Move, pos: [0, 7], endPos: [0, 5] }, //third, rook move
+			{ orderType: OrderType.Move, pos: [0, 4], endPos: [0, 2] }, //fourth, king move
+			{ orderType: OrderType.Move, pos: [0, 0], endPos: [0, 3] }, //fourth, rook move
+		]));
+	
 	}));
 
 	it('should identify castling through pieces as illegal', inject([BoardService], (service: BoardService) => {
