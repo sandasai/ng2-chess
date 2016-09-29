@@ -1,0 +1,21 @@
+.menu {
+	position: absolute;
+	background-color: #042A2B;
+	opacity: 0.8;
+	z-index: 2;
+}
+
+.menu-button {
+	opacity: 1.0;
+}
+
+.menu-content {
+	text-align: center;
+	vertical-align: middle;
+	opacity: 1;
+	color: white;
+}
+
+h1,h2,h3 {
+	color: white;
+}

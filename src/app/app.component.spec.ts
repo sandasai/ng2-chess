@@ -3,11 +3,20 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
+import { PieceComponent } from './piece/piece.component';
+import { GameComponent } from './game/game.component';
+import { BoardService } from './board/board.service';
+import { SquareComponent } from './game/square/square.component';
+import { GameService } from './game/game.service';
+
 describe('App: Ng2Chess', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+          AppComponent,
+	        GameComponent,
+	        SquareComponent,
+	        PieceComponent,
       ],
     });
   });

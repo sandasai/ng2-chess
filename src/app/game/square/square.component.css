@@ -1,0 +1,12 @@
+.square {
+	position: absolute;
+	border-style: solid;
+    border-radius: 2px;
+    border-width: 1.5px;
+}
+.square:hover {
+	border-color: red;
+}
+.square-selected {
+	border-color: #ff00ff;
+}

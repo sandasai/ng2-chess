@@ -1,0 +1,10 @@
+.board {
+	position: relative;
+}
+
+.square {
+}
+
+.piece {
+	position: absolute;
+}
