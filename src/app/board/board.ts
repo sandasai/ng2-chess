@@ -26,7 +26,7 @@ export interface IBoard {
 		If the final position has a piece on it, that 'captured' piece will be updated to have a null position
 		Returns the 'captured' piece (if it exists)
 	*/
-	movePiece(piece: Piece, pos: [number, number]): Piece;
+	movePiece(startPos: [number, number], endPos: [number, number]): Piece;
 
 }
 
@@ -90,16 +90,16 @@ export class Board implements IBoard {
 		return pieces;
 	}
 
-	movePiece(piece: Piece, pos: [number, number]): Piece {
-		let currentPos: [number, number] = piece.pos;
-		this.pieces[currentPos[0]][currentPos[1]] = null;
-		let destPiece = this.getPiece(pos);
-		if (destPiece) {
-			destPiece.remove();
-		}
-		this.moveLog.push([currentPos, pos]);
-		this.pieces[pos[0]][pos[1]] = piece;
-		piece.move(pos);
+	movePiece(startPos: [number, number], endPos: [number, number]): Piece {
+		let piece: Piece = this.getPiece(startPos);
+		if (piece == null)
+			return null;
+		this.pieces[startPos[0]][startPos[1]] = null;
+
+		let destPiece = this.removePiece(endPos);
+		this.moveLog.push([startPos, endPos]);
+		this.pieces[endPos[0]][endPos[1]] = piece;
+		piece.move(endPos);
 		return destPiece;
 	}
 

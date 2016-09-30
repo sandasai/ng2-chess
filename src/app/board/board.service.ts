@@ -124,7 +124,7 @@ export class BoardService {
 		//regular movements
 		let dupBoard: Board = BoardService.deepCopy(this.board);
 		let prospectPiece: Piece = dupBoard.getPiece(startPos);
-		dupBoard.movePiece(prospectPiece, endPos);
+		dupBoard.movePiece(startPos, endPos);
 
 		this.calcPossibleMoves(dupBoard);
 
@@ -204,16 +204,43 @@ export class BoardService {
 	/**
 	should probably handle movement instead of game service directly controlling the pieces
 	*/
-	movePiece(piece: Piece, endPos: [number, number]): void {
-		let initialPos: [number, number] = piece.pos;
-		this.board.movePiece(piece, endPos);
+	movePiece(startPos: [number, number], endPos: [number, number]): void {
+		let piece = this.board.getPiece(startPos);
+		this.board.movePiece(startPos, endPos);
 		this._pieceMovedSource.next(
 		{
 			piece: piece,
-			startPos: initialPos,
+			startPos: startPos,
 			endPos: endPos
 		}
 		);
+	}
+
+	/**
+	Adds a piece by color and rank to the position
+	*/
+	addPiece(color: Color, rank: Rank, pos: [number, number]): void {
+		this.removePiece(pos);
+		switch(rank) {
+      case Rank.Pawn:
+      	this.board.addPiece(new Pawn(color), pos);
+      	break;
+      case Rank.Knight:
+      	this.board.addPiece(new Knight(color), pos);
+      	break;
+      case Rank.Bishop:
+      	this.board.addPiece(new Bishop(color), pos);
+      	break;
+      case Rank.Rook:
+      	this.board.addPiece(new Rook(color), pos);
+      	break;
+      case Rank.Queen:
+      	this.board.addPiece(new Queen(color), pos);
+      	break;
+      case Rank.King:
+      	this.board.addPiece(new King(color), pos);
+      	break;    
+    }
 	}
 
 	removePiece(pos: [number, number]): void {
@@ -224,12 +251,14 @@ export class BoardService {
 	Returns true if the castle move is valid
 	*/
 	verifyCastle(king: Piece, pos: [number, number]): boolean {
+		let initSq:[number, number] = king.pos;
 		let dir = (pos[1] - king.pos[1] < 0)? -1 : 1;
 		let firstSq: [number, number] = [king.pos[0], king.pos[1] + dir]; //castle moves two squaes, this is the first square
+		
 		for (let sq of [king.pos, firstSq, pos]) {
 			let dupBoard: Board = BoardService.deepCopy(this.board);
-			let prospectKing: Piece = dupBoard.getPiece(king.pos);
-			dupBoard.movePiece(prospectKing, sq);
+			let prospectKing: Piece = dupBoard.getPiece(initSq);
+			dupBoard.movePiece(initSq, sq);
 			this.calcPossibleMoves(dupBoard);
 
 			if (this.isThreatened(prospectKing, dupBoard)) {
@@ -248,14 +277,10 @@ export class BoardService {
 			let piece: Piece;
 			switch (order.orderType) {
 				case OrderType.Move:
-					piece = this.board.getPiece(order.pos);
-					if (piece && order.endPos)
-						this.movePiece(piece, order.endPos);
+					this.movePiece(order.pos, order.endPos);
 				break;
 				case OrderType.Remove:
-					piece = this.board.getPiece(order.pos);
-					if (piece && order.pos)
-						this.removePiece(order.pos);
+					this.removePiece(order.pos);
 				break;
 			}
 		}

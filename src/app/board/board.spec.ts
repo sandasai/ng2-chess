@@ -48,8 +48,7 @@ describe('Board', () => {
 
   /** Editing Testboard here */
   it('should move a piece to a new position - movePiece()', () => {
-  	let pieceMoved = testBoard.getPiece([4, 5]);
-  	testBoard.movePiece(pieceMoved, [7, 7]);
+  	testBoard.movePiece([4,5], [7, 7]);
   	expect(testBoard.getPiece([7, 7])).toBeTruthy();
   });
 });

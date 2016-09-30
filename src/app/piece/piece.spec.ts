@@ -51,8 +51,8 @@ describe('King', () => {
   it('should not be able to preform castling when King OR Rook has moved', () => {
  		let wK = testboard.getPiece([7, 4]);
   	let bK = testboard.getPiece([0, 4]);
-  	testboard.movePiece(wK, [7, 5]);
-  	testboard.movePiece(wK, [7, 4]);
+  	testboard.movePiece([7,4], [7, 5]);
+  	testboard.movePiece([7,5], [7, 4]);
     wK.findPossibleMoves(testboard);
     bK.findPossibleMoves(testboard);
     expect(sqArrInSqArr(wK.possibleMoves, [[7,2],[7,6]])).toBeFalsy();
@@ -93,7 +93,7 @@ describe('Pawn', () => {
   	this.board.addPiece(bp1, [4,6]);
   	this.board.addPiece(bp2, [4,4]);
   	it('should be able to move and capture diagonally', () => {
-  		this.board.movePiece(bp0, bp0.pos); //moving to same position to register a movement
+  		this.board.movePiece(bp0.pos, bp0.pos); //moving to same position to register a movement
   		bp0.findPossibleMoves(this.board);
 	  	expect(bp0.possibleMoves.find((pos) => { return sqEqual(pos, [5, 2]); })).toBeTruthy();
 	  	expect(bp0.possibleMoves.find((pos) => { return sqEqual(pos, [5, 1]); })).toBeTruthy();
@@ -111,14 +111,14 @@ describe('Pawn', () => {
 
   	//checking enPassent
   	it('should be able to perform enPassent', () => {
-	  	this.board.movePiece(this.board.getPiece(six_five), [4, 5]);
+	  	this.board.movePiece(this.board.getPiece(six_five).pos, [4, 5]);
 	  	expect(this.board.getPiece([4, 5])).toBeTruthy();
 	  	bp1.findPossibleMoves(this.board);
 	  	bp2.findPossibleMoves(this.board);
 	  	expect(bp1.possibleMoves.find((pos) => { return sqEqual(pos, [5, 5]); })).toBeTruthy();
 	  	expect(bp2.possibleMoves.find((pos) => { return sqEqual(pos, [5, 5]); })).toBeTruthy();
       //assuming that pawn moves to same place again...sqEqual
-      this.board.movePiece(this.board.getPiece([4, 5]), [4, 5]);
+      this.board.movePiece(this.board.getPiece([4, 5]).pos, [4, 5]);
       bp1.findPossibleMoves(this.board);
       bp2.findPossibleMoves(this.board);
       expect(bp1.possibleMoves.find((pos) => { return sqEqual(pos, [5, 5]); })).toBeFalsy();

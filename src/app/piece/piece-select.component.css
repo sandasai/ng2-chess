@@ -1,0 +1,11 @@
+.piece-icon {
+	background-color: white;
+	border-radius: 2px;
+	border-color: black;
+	width: 80px;
+	height: 80px;
+}
+
+.piece-image-icon {
+	padding: 12px 0px 0px 12px
+}

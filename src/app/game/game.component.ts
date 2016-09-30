@@ -23,6 +23,7 @@ export class GameComponent implements OnInit {
   showMenu: boolean;
   menuWidthPx: string;
   menuHeightPx: string;
+  menuColorPieceSelect: Color; //use the game service instead
 
   constructor(private _boardService: BoardService, private _gameService: GameService) {
   	_gameService.uiMenuEvent$.subscribe((item) => this.onUiMenuEvent(item));
@@ -62,6 +63,7 @@ export class GameComponent implements OnInit {
   */
   menuPress(): void {
     this.showMenu = !this.showMenu;
+    this.menuColorPieceSelect = Color.White;
   }
 
   pieceMoved(item): void {

@@ -10,6 +10,7 @@ import { BoardService } from './board/board.service';
 import { SquareComponent } from './game/square/square.component';
 import { GameService } from './game/game.service';
 import { MenuComponent } from './menu/menu.component';
+import { PieceSelectComponent } from './piece/piece-select.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MenuComponent } from './menu/menu.component';
     GameComponent,
     SquareComponent,
     PieceComponent,
-    MenuComponent
+    MenuComponent,
+    PieceSelectComponent
   ],
   imports: [
     BrowserModule,

@@ -71,7 +71,7 @@ describe('Service: Board', () => {
 			    expect(dupBoard.getPiece([2,2]).possibleMoves.length).toEqual(8); //wB
 
 			    //moving pieces on the board
-			    dupBoard.movePiece(dupBoard.getPiece([2,2]), [4,0]);
+			    dupBoard.movePiece([2,2], [4,0]);
 			    service.calcPossibleMoves(dupBoard);
 
 			    expect(board.getPiece([4,4]).possibleMoves.length).toEqual(9); //bB
@@ -200,8 +200,8 @@ describe('Service: Board', () => {
 		    expect(service.inCheck(Color.Black, board)).toBeTruthy();
 		    expect(service.inCheckmate(Color.Black)).toBeFalsy();
 
-		    board.movePiece(board.getPiece([2,3]), [0,4]);
-		    board.movePiece(board.getPiece([0,2]),[0,4]);
+		    board.movePiece([2,3], [0,4]);
+		    board.movePiece([0,2],[0,4]);
 
 		    expect(service.inCheck(Color.Black, board)).toBeTruthy();
 		    expect(service.inCheckmate(Color.Black)).toBeTruthy();

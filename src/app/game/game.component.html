@@ -1,14 +1,14 @@
-<!-- <button (click)="menuPress()">Menu</button> -->
-
+<button (click)="menuPress()">Menu</button>
 <button (click)="startGame()">Restart Game</button>
-<!--
+
 <app-menu
 	*ngIf="showMenu"
 	[widthPx]="menuWidthPx"
 	[heightPx]="menuHeightPx"
-	(startGame)="startGame()">
+	[colorPieceSelect]="menuColorPieceSelect"
+>
 </app-menu>
--->
+
 <div class="board">
 	<app-square
 		*ngFor="let square of squares"

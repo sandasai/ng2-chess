@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Board } from '../board/board';
 import { BoardService } from '../board/board.service';
-import { Color, Selectable, sqEqual, MoveOrder, oppColor, BoardOrder } from '../chess.util';
+import { Color, Rank, Selectable, sqEqual, MoveOrder, oppColor, BoardOrder } from '../chess.util';
 import { Piece } from '../piece/piece';
 import { SquareComponent } from './square/square.component';
 
@@ -76,10 +76,30 @@ export class GameService {
         if (!this._boardService.confirmValidMove(this._startPos, pos, boardOrders))
           return;
         this._boardService.processOrders(boardOrders);
-        
+        //add handling for pawns reaching backrow if it did.
+        if (this.checkPawnBackrow()) {
+          this.userState = UserState.Menu;
+          return;
+        }
+
   			this.endTurn();
   			break;
+
+      default:
+        return;
   	}
+  }
+
+  /**
+  Checks if the pawn reaches the backrow, if so, will prompt
+  */
+  checkPawnBackrow() {
+
+  }
+
+  pawnPromotion(pos: [number,number], color: Color, rank: Rank) {
+    this._boardService.addPiece(color, rank, pos);
+    this.endTurn();
   }
 
   endTurn(): void {
