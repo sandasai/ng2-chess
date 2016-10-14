@@ -19,6 +19,14 @@ describe('Board', () => {
   testBoard.addPiece(p2,[4, 5]);
   testBoard.addPiece(p3,[4, 6]);
 
+  let testBoard2: Board;
+  beforeEach(() => {
+    testBoard2 = new Board();
+    testBoard2.addPiece(new King(Color.Black), [1, 5]);
+    testBoard2.addPiece(new King(Color.White), [2, 6]);
+    testBoard2.addPiece(new King(Color.Black), [4, 7]);
+  });
+
   it('should create an empty board', () => {
     expect(cleanBoard).toBeTruthy();
     expect(cleanBoard.findPieces().length).toEqual(0);
@@ -50,5 +58,25 @@ describe('Board', () => {
   it('should move a piece to a new position - movePiece()', () => {
   	testBoard.movePiece([4,5], [7, 7]);
   	expect(testBoard.getPiece([7, 7])).toBeTruthy();
+  });
+
+  it('should find pieces based on the board.pieces property', () => {
+    /* testBoard2 with pieces on [1, 5], [2, 6], [4, 7] */
+    expect(testBoard2.pieces.map(piece => piece.pos).find(pos => { return sqEqual(pos, [1, 5]) })).toBeTruthy();
+    expect(testBoard2.pieces.map(piece => piece.pos).find(pos => { return sqEqual(pos, [2, 6]) })).toBeTruthy();
+    expect(testBoard2.pieces.map(piece => piece.pos).find(pos => { return sqEqual(pos, [4, 7]) })).toBeTruthy();
+    expect(testBoard2.pieces.map(piece => piece.pos).indexOf([3, 3])).toEqual(-1);
+  });
+
+  it('should not find pieces on the board.pieces property if they have been removed from board', () => {
+    testBoard2.removePiece([2, 6]);
+    expect(testBoard2.pieces.map(piece => piece.pos).find(pos => { return sqEqual(pos, [2, 6]) })).toBeFalsy();
+    expect(testBoard2.pieces.length).toEqual(2);
+    expect(testBoard2.getPiece[2, 6]).toBeFalsy();
+
+    testBoard2.removePiece([1, 5]);
+    expect(testBoard2.pieces.map(piece => piece.pos).find(pos => { return sqEqual(pos, [1, 5]) })).toBeFalsy();
+    expect(testBoard2.pieces.length).toEqual(1);
+    expect(testBoard2.getPiece[1, 5]).toBeFalsy();  
   });
 });

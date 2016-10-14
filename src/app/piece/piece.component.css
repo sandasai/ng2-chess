@@ -1,6 +1,5 @@
 .piece {
 	position: absolute;
 	z-index: 1;
-	padding: 12px 0px 0px 12px;
 	pointer-events: none;
 }

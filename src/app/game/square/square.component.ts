@@ -10,20 +10,12 @@ import { GameService } from '../game.service';
 })
 export class SquareComponent implements OnInit, Selectable {
   @Input() square: Square;
-  width: string = "80px";
-	height: string = "80px";
+  @Input() squareSize: number;
   @Input() squareSpacing: number;
   windowX: number;
   windowY: number;
 
   selected: boolean = false;
-  
-  get windowXPx(): string {
-    return this.windowX.toString() + "px";
-  }
-  get windowYPx(): string {
-    return this.windowY.toString() + "px";
-  }
 
 	private whiteSqColor: string = "#FCFCFC";
 	private blackSqColor: string = "#5EB1BF";

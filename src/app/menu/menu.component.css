@@ -1,20 +1,17 @@
 .menu {
 	position: absolute;
-	background-color: #042A2B;
-	opacity: 1.0;
 	z-index: 2;
+    background: rgba(128, 128, 128, 0.9);
 }
 
-.menu-button {
-	opacity: 1.0;
-}
 
-.menu-content {
+.menu-content app-piece-select {
 	text-align: center;
-	vertical-align: middle;
-	opacity: 1;
-	color: white;
+	display: inline-block;
+	margin-top: 294px;
+	margin-left: 10px;
 }
+
 
 h1,h2,h3 {
 	color: white;

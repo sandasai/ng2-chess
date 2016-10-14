@@ -5,7 +5,7 @@ import { Square } from './square/square';
 import { Piece } from '.././piece/piece';
 import { PieceComponent } from '../piece/piece.component';
 import { BoardService } from '../board/board.service';
-import { GameService } from './game.service';
+import { GameService, UserState } from './game.service';
 import { Board } from '../board/board';
 
 @Component({
@@ -18,25 +18,28 @@ export class GameComponent implements OnInit {
 	squares: Square[];
 	pieces: Piece[];
 	board: Board;
-  squareSpacing: number;
+  squareSpacing: number = 68;
+  squareSize: number = 64;
 
-  showMenu: boolean;
   menuWidthPx: string;
   menuHeightPx: string;
-  menuColorPieceSelect: Color; //use the game service instead
+
+  get menuWidth(): number {
+    return this.squareSpacing * 8;
+  }
+  get menuHeight(): number {
+    return this.squareSpacing * 8;
+  }
+  
+  get showMenu(): boolean {
+    return this._gameService.userState === UserState.Menu;
+  }
 
   constructor(private _boardService: BoardService, private _gameService: GameService) {
   	_gameService.uiMenuEvent$.subscribe((item) => this.onUiMenuEvent(item));
-    this.showMenu = true;
-    //Probably include this in a game service
-    this.squareSpacing = 84;
-    _boardService.pieceMoved$.subscribe((item)=>this.pieceMoved(item));
   }
 
   ngOnInit() {
-    this.menuHeightPx = (this.squareSpacing * 8).toString() + "px";
-    this.menuWidthPx = (this.squareSpacing * 8).toString() + "px";
-
     //create Square pieces... should maybe be done in a service?
   	this.squares = [];
   	for (let i=0; i < 8; i++) { //row
@@ -56,26 +59,13 @@ export class GameComponent implements OnInit {
 
   }
 
-  /**
-  Remove the piece by filtering current piece by piece.pos === null.
-  Called when boardService moves a pieces to a position.
-  Essentially cleans the board
-  */
   menuPress(): void {
-    this.showMenu = !this.showMenu;
-    this.menuColorPieceSelect = Color.White;
-  }
-
-  pieceMoved(item): void {
-    this.pieces = this.pieces.filter((piece) => { //clear out any removed pieces
-      return piece.pos !== null;
-    });
+    this._gameService.userState = UserState.Menu
   }
 
   startGame(): void {
-    this.showMenu = false;
     this._gameService.startGame();
-    this.pieces = this._gameService.board.findPieces();
+    this.pieces = this._boardService.pieces;
   }
 
   onUiMenuEvent(item: any) {

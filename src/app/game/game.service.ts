@@ -27,6 +27,9 @@ export class GameService {
 	private _startPos: [number, number];
 	private _startPiece: Piece;
 
+  //Storing position of last pawn that reached backrow....
+  public backrowPawnPos: [number, number];
+
   //Emitting special events from service...
   private _uiOverlaySource = new Subject<Object>();
   uiMenuEvent$ = this._uiOverlaySource.asObservable(); //For emitting special events which should be shown on ui
@@ -76,8 +79,10 @@ export class GameService {
         if (!this._boardService.confirmValidMove(this._startPos, pos, boardOrders))
           return;
         this._boardService.processOrders(boardOrders);
-        //add handling for pawns reaching backrow if it did.
-        if (this.checkPawnBackrow()) {
+        //add handling for pawns reaching backrow if it did. If so, breaks out of this function, opens menu for pawn selection
+        if (this.isPawnBackrow()) {
+          console.log("pawn in backrow");
+          this.backrowPawnPos = pos; //assumes that only one board order was taken, the pawn movement to the backrow 
           this.userState = UserState.Menu;
           return;
         }
@@ -93,15 +98,27 @@ export class GameService {
   /**
   Checks if the pawn reaches the backrow, if so, will prompt
   */
-  checkPawnBackrow() {
-
+  isPawnBackrow(): boolean {
+    let backRow: number = (this.playerTurn === Color.White)? 0 : 7;
+    let backPawns: Piece[] = this.board.findPieces((piece) => {
+      return (piece.rank === Rank.Pawn && 
+              piece.color === this.playerTurn &&
+              piece.pos[0] === backRow);
+    });
+    return backPawns.length !== 0;
   }
 
+  /**
+  Event to be called from menu component. GameService stores which pawn is to be promoted and adds it to the board
+  */
   pawnPromotion(pos: [number,number], color: Color, rank: Rank) {
     this._boardService.addPiece(color, rank, pos);
     this.endTurn();
   }
 
+  /**
+  Deselects any selected square, changes turns, calculates check or checkmate
+  */
   endTurn(): void {
     this.changeSelect();
   	this.playerTurn = this.playerTurn === Color.White ? Color.Black : Color.White;

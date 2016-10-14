@@ -17,7 +17,22 @@ export const IMAGES = {
   Black_Rook: '/images/Rook Filled.png',
   Black_Queen: '/images/Queen Filled.png',
   Black_King: '/images/King Filled.png'
-}
+};
+
+export const svgIMAGES = {
+  White_Pawn : '/images/pieces/Chess_plt45.svg',
+  White_Knight: '/images/pieces/Chess_nlt45.svg',
+  White_Bishop: '/images/pieces/Chess_blt45.svg',
+  White_Rook: '/images/pieces/Chess_rlt45.svg',
+  White_Queen: '/images/pieces/Chess_qlt45.svg',
+  White_King: '/images/pieces/Chess_klt45.svg',
+  Black_Pawn : '/images/pieces/Chess_pdt45.svg',
+  Black_Knight: '/images/pieces/Chess_ndt45.svg',
+  Black_Bishop: '/images/pieces/Chess_bdt45.svg',
+  Black_Rook: '/images/pieces/Chess_rdt45.svg',
+  Black_Queen: '/images/pieces/Chess_qdt45.svg',
+  Black_King: '/images/pieces/Chess_kdt45.svg'
+};
 
 @Component({
   selector: 'app-piece',
@@ -29,14 +44,8 @@ export class PieceComponent implements OnInit {
   @Input() piece: Piece;
   windowX: number;
   windowY: number;
+  @Input() squareSize: number;
   @Input() squareSpacing: number;
-
-  get windowXPx(): string {
-    return this.windowX.toString() + "px";
-  }
-  get windowYPx(): string {
-    return this.windowY.toString() + "px";
-  }
 
   constructor(private _boardService: BoardService) { 
     _boardService.pieceMoved$.subscribe((item)=>this.pieceMoved(item));
@@ -44,7 +53,7 @@ export class PieceComponent implements OnInit {
 
   /**
   Updates the rendered position of the piece.
-  Assumes that the piece object has its position already updated
+  Assumes that the piece object has its position already updated (this.piece.pos)
   */
   pieceMoved(item): void {
     if (Object.keys(item).length === 0)
@@ -53,8 +62,6 @@ export class PieceComponent implements OnInit {
     let numFrames: number = 40;
     if (piece.pos !== this.piece.pos)
       return;
-
-    //this.setWindowCoordinates();
 
     let startX: number = item.startPos[1] * this.squareSpacing;
     let startY: number = item.startPos[0] * this.squareSpacing;
@@ -95,17 +102,17 @@ export class PieceComponent implements OnInit {
   get imgSrc(): string {
     switch(this.piece.rank) {
       case Rank.Pawn:
-        return (this.piece.color === Color.White) ? IMAGES.White_Pawn : IMAGES.Black_Pawn;
+        return (this.piece.color === Color.White) ? svgIMAGES.White_Pawn : svgIMAGES.Black_Pawn;
       case Rank.Knight:
-        return (this.piece.color === Color.White) ? IMAGES.White_Knight : IMAGES.Black_Knight;
+        return (this.piece.color === Color.White) ? svgIMAGES.White_Knight : svgIMAGES.Black_Knight;
       case Rank.Bishop:
-        return (this.piece.color === Color.White) ? IMAGES.White_Bishop : IMAGES.Black_Bishop;
+        return (this.piece.color === Color.White) ? svgIMAGES.White_Bishop : svgIMAGES.Black_Bishop;
       case Rank.Rook:
-        return (this.piece.color === Color.White) ? IMAGES.White_Rook : IMAGES.Black_Rook;
+        return (this.piece.color === Color.White) ? svgIMAGES.White_Rook : svgIMAGES.Black_Rook;
       case Rank.Queen:
-        return (this.piece.color === Color.White) ? IMAGES.White_Queen : IMAGES.Black_Queen;
+        return (this.piece.color === Color.White) ? svgIMAGES.White_Queen : svgIMAGES.Black_Queen;
       case Rank.King:
-        return (this.piece.color === Color.White) ? IMAGES.White_King : IMAGES.Black_King;
+        return (this.piece.color === Color.White) ? svgIMAGES.White_King : svgIMAGES.Black_King;
     }
   }
     

@@ -1,17 +1,13 @@
 <div class="menu"
-	[style.width]="widthPx"
-	[style.height]="heightPx"
+	[style.width.px]="width"
+	[style.height.px]="height"
 	>
 	<div class="menu-content">
-		<!--
-		<h1>ng2-chess</h1>
-		<h2>By Sanda</h2>
-		<button class="menu-button">Restart</button>
-		<button class="menu-button" (click)="onStartGame()">Start</button>
-		-->
 		<app-piece-select *ngFor="let obj of pieceSelectList"
 			[color]=obj.color
 			[rank]=obj.rank
+			[squareSize]="squareSize"
+			(click)="onPieceSelected(obj)"
 		>
 		</app-piece-select>
 	</div>

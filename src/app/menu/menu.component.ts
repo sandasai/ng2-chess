@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Color, Rank } from '../chess.util';
+import { GameService, UserState } from '../game/game.service';
 
 @Component({
   selector: 'app-menu',
@@ -7,15 +8,15 @@ import { Color, Rank } from '../chess.util';
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
-	@Input() widthPx: string;
-	@Input() heightPx: string;
-  @Input() colorPieceSelect: Color;
+  @Input() squareSize: number;
+  @Input() width: number;
+  @Input() height: number;
+  colorPieceSelect: Color;
 
-	@Output() menuExit = new EventEmitter<any>();
+  pieceSelectList: any[]; //List of pieces to render in the menu
 
-  pieceSelectList: any[];
-
-  constructor() { 
+  constructor(private _gameService: GameService) { 
+    this.colorPieceSelect = this._gameService.playerTurn;
   }
 
   ngOnInit() {
@@ -30,8 +31,12 @@ export class MenuComponent implements OnInit {
     this.pieceSelectList[4].rank = Rank.Queen;
   }
 
-  onPieceSelected() {
-  	this.menuExit.emit();
+  /**
+  Event handler for pawn promotion
+  */
+  onPieceSelected(pieceSelect: any) {
+    console.log(Rank[pieceSelect.rank]);
+    this._gameService.pawnPromotion(this._gameService.backrowPawnPos, pieceSelect.color, pieceSelect.rank); 
   }
 
 }

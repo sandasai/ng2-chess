@@ -3,16 +3,18 @@
 
 <app-menu
 	*ngIf="showMenu"
-	[widthPx]="menuWidthPx"
-	[heightPx]="menuHeightPx"
-	[colorPieceSelect]="menuColorPieceSelect"
+	[width]="menuWidth"
+	[height]="menuHeight"
+	[squareSize]="squareSize"
 >
+
 </app-menu>
 
 <div class="board">
 	<app-square
 		*ngFor="let square of squares"
-		[squareSpacing]="squareSpacing"	
+		[squareSpacing]="squareSpacing"
+		[squareSize]="squareSize"	
 		[square]="square"
 		>
 	</app-square>
@@ -20,6 +22,7 @@
 	<app-piece
 		*ngFor="let piece of pieces"
 		[squareSpacing]="squareSpacing"
+		[squareSize]="squareSize"
 		[piece]="piece"
 		>
 	</app-piece>

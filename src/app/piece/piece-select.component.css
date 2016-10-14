@@ -1,11 +1,19 @@
 .piece-icon {
+	display: block;
 	background-color: white;
 	border-radius: 2px;
-	border-color: black;
-	width: 80px;
-	height: 80px;
+	border-style: solid;
+	border-width: 1.5px;
+	width: 64px;
+	height: 64px;
+	text-align: initial;
+	margin-left: 10px;
+	/*float: left;*/
+}
+
+.piece-icon:hover {
+	border-color: red;
 }
 
 .piece-image-icon {
-	padding: 12px 0px 0px 12px
 }

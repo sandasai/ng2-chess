@@ -9,6 +9,7 @@ import { Subject } from 'rxjs/Subject';
 export class BoardService {
 
 	board: Board;
+	pieces: Piece[];
 
 	private _pieceMovedSource = new Subject<Object>();
 	pieceMoved$ = this._pieceMovedSource.asObservable(); //Components can subscribe to this event
@@ -58,6 +59,7 @@ export class BoardService {
 		this.board.addPiece(new Rook(Color.Black), [0, 7]);
 
 		this.calcPossibleMoves();
+		this.pieces = this.board.pieces;
 	}
 
 	/** Creates a new board */
@@ -214,10 +216,11 @@ export class BoardService {
 			endPos: endPos
 		}
 		);
+		this.updatePieces();
 	}
 
 	/**
-	Adds a piece by color and rank to the position
+	Adds a piece by color and rank to the position. Removes any piece that existed on that square previously
 	*/
 	addPiece(color: Color, rank: Rank, pos: [number, number]): void {
 		this.removePiece(pos);
@@ -241,11 +244,14 @@ export class BoardService {
       	this.board.addPiece(new King(color), pos);
       	break;    
     }
+    console.log(this.board.getPiece(pos));
+		this.updatePieces();
 	}
 
 	removePiece(pos: [number, number]): void {
 		this.board.removePiece(pos);
 		this._pieceMovedSource.next({});
+		this.updatePieces();
 	}
 	/**
 	Returns true if the castle move is valid
@@ -270,7 +276,7 @@ export class BoardService {
 	}
 
 	/** 
-	Process orders to be accomplied. Does not error check. May not be used.
+	Process orders to be complied. Does not error check whether the move is valid or not
 	*/
 	processOrders(boardOrders: BoardOrder[]): void {
 		for (let order of boardOrders) {
@@ -284,5 +290,12 @@ export class BoardService {
 				break;
 			}
 		}
+	}
+
+	/* 
+	Used for emitting animation events in piece.component
+	*/
+	updatePieces(): void {
+		this._pieceMovedSource.next({});
 	}
 }

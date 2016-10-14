@@ -7,5 +7,5 @@ import { GameComponent } from './game/game.component';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'app works!';
+  title = 'ng2-chess';
 }

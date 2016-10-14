@@ -1,7 +1,9 @@
 import { Piece, Pawn, King } from '../piece/piece';
-import { Color, Rank } from '../chess.util';
+import { Color, Rank, sqEqual } from '../chess.util';
 
 export interface IBoard {
+	pieces: Piece[];
+
 	moveLog: [number, number][][];
 
 	/** Returns true if the given sqvec is a valid location on the board */
@@ -31,12 +33,14 @@ export interface IBoard {
 }
 
 export class Board implements IBoard {
-	private pieces: Piece[][];
+	public pieces: Piece[];
+	private piecesIndex: Piece[][]; // Use for indexing pieces by position
 	bounds: [number, number];
 	moveLog: [number, number][][]; //keep a running entry for moves that are taken on this board. First index is start, second index is finish
 
 	constructor() {
 		this.pieces = [];
+		this.piecesIndex = [];
 		this.bounds = [8, 8]; //for chess
 		this.moveLog = [];
 		for (let i = 0; i < this.bounds[0]; i++) {
@@ -44,7 +48,7 @@ export class Board implements IBoard {
 			for (let j = 0; j < this.bounds[1]; j++) {
 				newRow.push(null);
 			}
-			this.pieces.push(newRow);
+			this.piecesIndex.push(newRow);
 		}
 	}
 
@@ -53,16 +57,23 @@ export class Board implements IBoard {
 	}
 
 	addPiece(piece: Piece, pos: [number, number]): void {
-		if(this.pieces[pos[0]][pos[1]] != null) {
-			this.pieces[pos[0]][pos[1]].remove();
+		if(this.piecesIndex[pos[0]][pos[1]] != null) {
+			this.piecesIndex[pos[0]][pos[1]].remove();
 		}
-		this.pieces[pos[0]][pos[1]] = piece;
+		this.piecesIndex[pos[0]][pos[1]] = piece;
+		this.pieces.push(piece);
 		piece.move(pos);
 	}
 
 	removePiece(pos: [number, number]): Piece {
-		let piece = this.pieces[pos[0]][pos[1]];
-		this.pieces[pos[0]][pos[1]] = null;
+		let piece = this.piecesIndex[pos[0]][pos[1]];
+		this.piecesIndex[pos[0]][pos[1]] = null;
+
+		let index = this.pieces.map(p => p.pos).findIndex(piecePos => { return sqEqual(pos, piecePos)});
+		if (index > -1) {
+			this.pieces.splice(index, 1);
+		}
+
 		if (piece)
 			piece.remove();
 		return piece;
@@ -71,34 +82,34 @@ export class Board implements IBoard {
 	getPiece(pos: [number, number]): Piece {
 		if (!this.checkOutOfBounds(pos))
 			return null;
-		return this.pieces[pos[0]][pos[1]];
+		return this.piecesIndex[pos[0]][pos[1]];
 	}
 	getPieceArr(): Piece[][] {
-		return this.pieces;
+		return this.piecesIndex;
 	}
 
 	findPieces(callback?: (piece: Piece) => boolean): Piece[] {
-		let pieces: Piece[] = [];
-		for (let pRow of this.pieces) {
+		let piecesIndex: Piece[] = [];
+		for (let pRow of this.piecesIndex) {
 			if (callback) {
 				pRow = pRow.filter((piece: Piece) => { return (piece == null) ? false: true } );
-				pieces = pieces.concat(pRow.filter(callback));
+				piecesIndex = piecesIndex.concat(pRow.filter(callback));
 			}
 			else 
-				pieces = pieces.concat(pRow.filter((piece: Piece) => { return (piece == null) ? false : true}));
+				piecesIndex = piecesIndex.concat(pRow.filter((piece: Piece) => { return (piece == null) ? false : true}));
 		}
-		return pieces;
+		return piecesIndex;
 	}
 
 	movePiece(startPos: [number, number], endPos: [number, number]): Piece {
 		let piece: Piece = this.getPiece(startPos);
 		if (piece == null)
 			return null;
-		this.pieces[startPos[0]][startPos[1]] = null;
+		this.piecesIndex[startPos[0]][startPos[1]] = null;
 
 		let destPiece = this.removePiece(endPos);
 		this.moveLog.push([startPos, endPos]);
-		this.pieces[endPos[0]][endPos[1]] = piece;
+		this.piecesIndex[endPos[0]][endPos[1]] = piece;
 		piece.move(endPos);
 		return destPiece;
 	}

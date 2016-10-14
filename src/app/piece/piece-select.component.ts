@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IMAGES } from './piece.component';
+import { IMAGES, svgIMAGES } from './piece.component';
 import { Color, Rank} from '../chess.util';
 
 @Component({
@@ -11,6 +11,7 @@ export class PieceSelectComponent implements OnInit {
 
 	@Input() color: Color;
 	@Input() rank: Rank;
+  @Input() squareSize: number;
 
   constructor() { }
 
@@ -20,17 +21,17 @@ export class PieceSelectComponent implements OnInit {
   get imgSrc(): string {
     switch(this.rank) {
       case Rank.Pawn:
-        return (this.color === Color.White) ? IMAGES.White_Pawn : IMAGES.Black_Pawn;
+        return (this.color === Color.White) ? svgIMAGES.White_Pawn : svgIMAGES.Black_Pawn;
       case Rank.Knight:
-        return (this.color === Color.White) ? IMAGES.White_Knight : IMAGES.Black_Knight;
+        return (this.color === Color.White) ? svgIMAGES.White_Knight : svgIMAGES.Black_Knight;
       case Rank.Bishop:
-        return (this.color === Color.White) ? IMAGES.White_Bishop : IMAGES.Black_Bishop;
+        return (this.color === Color.White) ? svgIMAGES.White_Bishop : svgIMAGES.Black_Bishop;
       case Rank.Rook:
-        return (this.color === Color.White) ? IMAGES.White_Rook : IMAGES.Black_Rook;
+        return (this.color === Color.White) ? svgIMAGES.White_Rook : svgIMAGES.Black_Rook;
       case Rank.Queen:
-        return (this.color === Color.White) ? IMAGES.White_Queen : IMAGES.Black_Queen;
+        return (this.color === Color.White) ? svgIMAGES.White_Queen : svgIMAGES.Black_Queen;
       case Rank.King:
-        return (this.color === Color.White) ? IMAGES.White_King : IMAGES.Black_King;
+        return (this.color === Color.White) ? svgIMAGES.White_King : svgIMAGES.Black_King;
     }
   }
 
