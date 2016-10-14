@@ -18,7 +18,7 @@ export class SquareComponent implements OnInit, Selectable {
   selected: boolean = false;
 
 	private whiteSqColor: string = "#FCFCFC";
-	private blackSqColor: string = "#5EB1BF";
+	private blackSqColor: string = "#72A98F";
 
   constructor(private _gameService: GameService) { }
 

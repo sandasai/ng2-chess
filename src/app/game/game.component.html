@@ -1,16 +1,18 @@
-<button (click)="menuPress()">Menu</button>
-<button (click)="startGame()">Restart Game</button>
+<!--
+<button class="button button-primary" (click)="menuPress()">Menu</button>
+-->
+<button class="button button-primary" (click)="startGame()">Restart Game</button>
+
+
+<div class="board" [style.width.px]="menuWidth" [style.height.px]="menuHeight">
 
 <app-menu
 	*ngIf="showMenu"
 	[width]="menuWidth"
 	[height]="menuHeight"
-	[squareSize]="squareSize"
->
-
+	[squareSize]="squareSize">
 </app-menu>
 
-<div class="board">
 	<app-square
 		*ngFor="let square of squares"
 		[squareSpacing]="squareSpacing"

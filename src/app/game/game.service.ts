@@ -10,7 +10,8 @@ import { Subject } from 'rxjs/Subject';
 export enum UserState {
 	SelectSt,
 	SelectEnd,
-	Menu
+	Menu,
+  Checkmate
 }
 
 @Injectable()
@@ -130,6 +131,7 @@ export class GameService {
   	}
     if(this._boardService.inCheckmate(this.playerTurn)) {
       console.log("Checkmate");
+      this.userState = UserState.Checkmate;
       this._uiOverlaySource.next({ test: "hello" });
     }
 

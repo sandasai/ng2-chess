@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IMAGES, svgIMAGES } from './piece.component';
+import { svgIMAGES } from './piece.component';
 import { Color, Rank} from '../chess.util';
 
 @Component({

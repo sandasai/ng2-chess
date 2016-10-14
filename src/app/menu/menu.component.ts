@@ -13,10 +13,25 @@ export class MenuComponent implements OnInit {
   @Input() height: number;
   colorPieceSelect: Color;
 
+  get playerTurn(): string {
+    return this.gameService.playerTurn === Color.White ? 'Black' : 'White';
+  }
+
+  get showContent(): string {
+    if(this.gameService.userState === UserState.Menu) 
+        return 'menu';
+    else if (this.gameService.userState === UserState.Checkmate)
+        return 'checkmate';
+    return null;
+  }
+  get showPawnPromotion(): boolean {
+    return this.gameService.userState === UserState.Menu;
+  }
+
   pieceSelectList: any[]; //List of pieces to render in the menu
 
-  constructor(private _gameService: GameService) { 
-    this.colorPieceSelect = this._gameService.playerTurn;
+  constructor(public gameService: GameService) { 
+    this.colorPieceSelect = this.gameService.playerTurn;
   }
 
   ngOnInit() {
@@ -36,7 +51,7 @@ export class MenuComponent implements OnInit {
   */
   onPieceSelected(pieceSelect: any) {
     console.log(Rank[pieceSelect.rank]);
-    this._gameService.pawnPromotion(this._gameService.backrowPawnPos, pieceSelect.color, pieceSelect.rank); 
+    this.gameService.pawnPromotion(this.gameService.backrowPawnPos, pieceSelect.color, pieceSelect.rank); 
   }
 
 }

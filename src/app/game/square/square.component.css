@@ -3,6 +3,8 @@
 	border-style: solid;
     border-radius: 2px;
     border-width: 1.5px;
+    top: 0;
+    left: 0;
 }
 .square:hover {
 	border-color: red;

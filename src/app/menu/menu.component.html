@@ -2,14 +2,19 @@
 	[style.width.px]="width"
 	[style.height.px]="height"
 	>
-	<div class="menu-content">
-		<app-piece-select *ngFor="let obj of pieceSelectList"
-			[color]=obj.color
-			[rank]=obj.rank
-			[squareSize]="squareSize"
-			(click)="onPieceSelected(obj)"
-		>
-		</app-piece-select>
+	<div class="menu-content" [style.margin-top.px]="height/2 - squareSize/2">
+		<div *ngIf="showContent === 'checkmate'">
+			<h2>Checkmate!<br>{{playerTurn}} wins!</h2>
+		</div>
+		<div *ngIf="showContent === 'menu'">
+			<app-piece-select *ngFor="let obj of pieceSelectList"
+				[color]=obj.color
+				[rank]=obj.rank
+				[squareSize]="squareSize"
+				(click)="onPieceSelected(obj)"
+			>
+			</app-piece-select>
+		</div>
 	</div>
 
 </div>

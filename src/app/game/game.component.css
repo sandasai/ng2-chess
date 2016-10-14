@@ -1,10 +1,6 @@
 .board {
 	position: relative;
+    width: 50%;
+    margin: 0 auto; 
 }
 
-.square {
-}
-
-.piece {
-	position: absolute;
-}

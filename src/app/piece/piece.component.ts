@@ -1,23 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, 
+  trigger,
+  state,
+  style,
+  transition,
+  animate } from '@angular/core';
 import { Color, Rank} from '../chess.util';
 import { GameService } from '../game/game.service';
 import { Piece } from './piece';
 import { BoardService } from '../board/board.service'; //for subscribing to movement events
-
-export const IMAGES = {
-  White_Pawn : '/images/Pawn.png',
-  White_Knight: '/images/Knight.png',
-  White_Bishop: '/images/Bishop.png',
-  White_Rook: '/images/Rook.png',
-  White_Queen: '/images/Queen.png',
-  White_King: '/images/King.png',
-  Black_Pawn : '/images/Pawn Filled.png',
-  Black_Knight: '/images/Knight Filled.png',
-  Black_Bishop: '/images/Bishop Filled.png',
-  Black_Rook: '/images/Rook Filled.png',
-  Black_Queen: '/images/Queen Filled.png',
-  Black_King: '/images/King Filled.png'
-};
 
 export const svgIMAGES = {
   White_Pawn : '/images/pieces/Chess_plt45.svg',
@@ -37,7 +27,16 @@ export const svgIMAGES = {
 @Component({
   selector: 'app-piece',
   templateUrl: 'piece.component.html',
-  styleUrls: ['piece.component.css']
+  styleUrls: ['piece.component.css'],
+  animations: [
+    trigger('fadeIn', [
+        state('*', style({'opacity': 1})),
+        transition('void => *', [
+            style({'opacity': 0}),
+            animate('800ms linear'),
+        ])
+    ])
+  ]
 })
 export class PieceComponent implements OnInit {
 

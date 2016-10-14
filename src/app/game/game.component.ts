@@ -21,9 +21,6 @@ export class GameComponent implements OnInit {
   squareSpacing: number = 68;
   squareSize: number = 64;
 
-  menuWidthPx: string;
-  menuHeightPx: string;
-
   get menuWidth(): number {
     return this.squareSpacing * 8;
   }
@@ -32,7 +29,7 @@ export class GameComponent implements OnInit {
   }
   
   get showMenu(): boolean {
-    return this._gameService.userState === UserState.Menu;
+    return this._gameService.userState === UserState.Menu || this._gameService.userState === UserState.Checkmate;
   }
 
   constructor(private _boardService: BoardService, private _gameService: GameService) {
@@ -71,5 +68,6 @@ export class GameComponent implements OnInit {
   onUiMenuEvent(item: any) {
     console.log("ui special event!");
     console.log(item);
+
   }
 }
