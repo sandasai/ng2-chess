@@ -1,4 +1,15 @@
-# Ng2Chess
+# Angular 2 Chess Application
+
+Play regular chess. There are no bots implemented yet - Black and White are user controlled.
+
+Stalemate notifications are not implemented yet - but you'll probably notice once you get there.
+
+Tests are found in the .spec.ts files for the components.
+
+
+
+
+# From Angular-cli ------------
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.15.
 
