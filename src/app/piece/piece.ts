@@ -7,9 +7,9 @@ export abstract class Piece {
 	onBoard: boolean;
 	color: Color;
 	rank: Rank;
-	moves: [number, number][]; //includes the starting position. So it starts at length 1.
-	possibleMoves: [number, number][];
-	pos: [number, number];
+	moves: [number, number][]; //includes the starting position. So it starts at length 1
+	possibleMoves: [number, number][]; //where the piece can physically move to this turn 
+	pos: [number, number]; //current position on the board
 
 	constructor(color: Color) {
 		this.color = color;
@@ -36,6 +36,11 @@ export abstract class Piece {
   	/** Finds the possible moves this piece can physically move to */
   	abstract findPossibleMoves(board: IBoard): void;
 
+    /** Helper function to find squares that piece can move when moving in a specific direction 
+      startPos - position where the piece may be at or moving from
+      vector - the direction where the piece is headed
+      validPos - holder for the positions that the piece can move to
+    */
   	protected infMoveHelper(startPos: [number, number], board: IBoard, vector: [number, number], validPos: [number, number][]): [number, number][] {
 		let endPos: [number, number] = sqAdd(vector, startPos);
 	    if (!board.checkOutOfBounds(endPos)) return validPos; //indexing out of bounds
@@ -82,8 +87,9 @@ export class King extends Piece {
 		return false;
 	}
 	
+  /* Kings can move one square in any direction, or can perform a castle if the king and it's rook has not moved yet */
 	findPossibleMoves(board: IBoard): void {
-		this.possibleMoves = []; //reinitialize
+		this.possibleMoves = [];
 		let vectors: [number, number][] = [
 			[-1, -1], // NW
 			[-1, 0],  // N
@@ -154,6 +160,9 @@ export class Pawn extends Piece {
 		return false;
 	}
 
+  /* Pawns can move two spaces on it's first move. One space forward otherwise. 
+  Can attack pieces one square diagonal in the direction where it's moving. Can also capture with enPassent
+  */
 	findPossibleMoves(board: IBoard): void {
 		this.possibleMoves = [];
 		let dir = (this.color === Color.White) ? -1 : 1;
@@ -190,8 +199,6 @@ export class Pawn extends Piece {
 	        this.checkEnPassent(diagPosAlt, board)) {
 	        this.possibleMoves.push(diagPosAlt);
 	    }
-
-	    //en passent
 	}
 }
 
@@ -200,8 +207,9 @@ export class Knight extends Piece {
 		super(color);
 		this.rank = Rank.Knight;
 	}
+  /* Knights can only move in L shape patterns 2x1 or 1x2 squares */
 	findPossibleMoves(board: IBoard): void {
-		this.possibleMoves = []; //reinitialize
+		this.possibleMoves = [];
 		let vectors: [number, number][] = [
 			[-1, -2], 
 			[-1, 2], 
@@ -234,6 +242,7 @@ export class Bishop extends Piece {
 		super(color);
 		this.rank = Rank.Bishop;
 	}
+  /* Bishops can move any number of spaces diagonally */
 	findPossibleMoves(board: IBoard): void {
 		this.possibleMoves = [];
 	    let moveDirections: [number, number][] = [
@@ -255,6 +264,7 @@ export class Rook extends Piece {
 		super(color);
 		this.rank = Rank.Rook;
 	}
+  /* Rooks can move another of spaces horizontally and vertically */
 	findPossibleMoves(board: IBoard): void {
 		this.possibleMoves = [];
 	    let moveDirections: [number, number][] = [
@@ -276,6 +286,7 @@ export class Queen extends Piece {
 		super(color);
 		this.rank = Rank.Queen;
 	}
+  /* Queen can move any number of spaces vertically, horizontally, and diagonally */
 	findPossibleMoves(board: IBoard): void {
 		this.possibleMoves = [];
 	    let moveDirections: [number, number][] = [
